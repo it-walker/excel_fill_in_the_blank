@@ -7,3 +7,9 @@
 ```
 pytest -v 
 ```
+
+## ビルド
+
+```
+pyinstaller main.spec --onefile --clean
+```

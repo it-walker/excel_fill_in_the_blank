@@ -9,6 +9,7 @@ import xlwings as xw
 from sex import Sex
 from wareki import Wareki
 from util import Util
+from settings_manager import SettingsManager
 
 
 class ReportInsured:
@@ -26,6 +27,9 @@ class ReportInsured:
     COLUMN_ADDRESS_KANA = '住所カナ (11)'
     COLUMN_FULL_NAME_KANA = '社員氏名カナ (5)'
     COLUMN_HEALTH_INSURANCE_NUMBER = '健康保険被保険者番号 (45)'
+
+    def __init__(self, conf):
+        self._conf = conf
 
     def cell(self, reference_key, row_index):
         return self.sheet.range(reference_key).offset(ReportInsured.OFFSET_ROW * row_index, 0)
@@ -161,23 +165,18 @@ class ReportInsured:
         # 健康保険資格取得日
         self.set_health_insurance(index, relative_index)
 
-    def generate(self, input_file_path, template_file_path, save_directory):
+    def generate(self):
         """被保険者資格取得届を出力する（.xlsx）
-
-        Arguments:
-            input_file_path {string} -- [社労夢データ（.xlsx）]
-            template_file_path {[string]} -- [テンプレートファイルパス]
-            save_directory {[string]} -- [保存ディレクトリパス]
         """
 
-        self.df = pd.read_excel(input_file_path)
+        self.df = pd.read_excel(self._conf.input_file_path)
         li = list(range(len(self.df)))
         group_by = 4
-        aaa = [li[i:i + group_by] for i in range(0, len(li), group_by)]
-        for index, current_list in enumerate(aaa):
-            save_file = os.path.join(
-                save_directory, 'out_' + str(index).zfill(2) + '.xlsx')
-            shutil.copy(template_file_path, save_file)
+        index_list = [li[i:i + group_by] for i in range(0, len(li), group_by)]
+        for index, current_list in enumerate(index_list):
+            file_name = "{0}_{1}.xlsx".format(self._conf.save_file_name, str(index + 1).zfill(2))
+            save_file = os.path.join(self._conf.save_directory, file_name)
+            shutil.copy(self._conf.template_file_path, save_file)
             wb = xw.Book(save_file)
             self.sheet = wb.sheets[0]
 

@@ -1,13 +1,14 @@
 from report_insured import ReportInsured
+from settings_manager import SettingsManager
+
+import os
 
 def main():
-    input_file = r'C:\work\source\testdata\社労夢データ.xlsx'
-    template = r'C:\work\source\testdata\template.xlsx'
-    template_copy = r'C:\work\source\testdata'
-    # template_copy = r'C:\work\source\testdata\template_copy.xlsx'
-
-    report_instance = ReportInsured()
-    report_instance.generate(input_file, template, template_copy)
+    config_file_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
+    conf = SettingsManager()
+    conf.load(config_file_path)
+    report_instance = ReportInsured(conf)
+    report_instance.generate()
 
 if __name__ == '__main__':
     main()
