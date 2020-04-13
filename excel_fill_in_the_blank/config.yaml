@@ -1,0 +1,9 @@
+columns:
+  &address1: '住所1 (9)'
+
+reference:
+  from: *address1
+  to: N86
+
+    from: *address1
+  to: N87
