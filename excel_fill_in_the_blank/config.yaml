@@ -1,0 +1,6 @@
+in_out:
+  input_file_path: C:\work\source\testdata\社労夢データ.xlsx
+  template_file_path: C:\work\source\testdata\template.xlsx
+  save_directory: C:\work\source\testdata
+  save_file_name: 資格取得届
+
